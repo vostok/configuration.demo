@@ -1,0 +1,9 @@
+full-build *default:
+  build:
+    target: Vostok.Configuration.Demo.sln
+    configuration: Release
+    tool:
+      name: dotnet
+
+  deps:
+    - vostok.devtools
