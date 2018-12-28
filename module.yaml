@@ -7,3 +7,6 @@ full-build *default:
 
   deps:
     - vostok.devtools
+    - vostok.configuration
+    - vostok.configuration.sources
+    - vostok.configuration.sources.json
