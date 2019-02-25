@@ -123,7 +123,7 @@ namespace Vostok.Configuration.Demo
             var source1 = new JsonStringSource("{ 'a': [1, 2, 3] }");
             var source2 = new JsonStringSource("{ 'a': [4], 'b': '5' }");
 
-            provider.Get<int[]>(source1.Combine(source2).ScopeTo("a"))
+            provider.Get<int[]>(source1.CombineWith(source2).ScopeTo("a"))
                 .Should()
                 .BeEquivalentTo(new[]{1, 2, 3, 4});
         }
@@ -135,7 +135,7 @@ namespace Vostok.Configuration.Demo
             {
                 var source1 = new JsonFileSource(new FileSourceSettings(temporaryFile.FileName){FileWatcherPeriod = 100.Milliseconds()});
                 var source2 = new JsonStringSource("{ 'a': [3], 'b': '4' }");
-                var combinedScopedSource = source1.Combine(source2).ScopeTo("a");
+                var combinedScopedSource = source1.CombineWith(source2).ScopeTo("a");
                 
                 provider.Get<int[]>(combinedScopedSource)
                     .Should()
