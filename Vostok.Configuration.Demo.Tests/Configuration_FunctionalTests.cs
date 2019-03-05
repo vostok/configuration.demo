@@ -14,7 +14,7 @@ using Vostok.Configuration.Sources.Constant;
 using Vostok.Configuration.Sources.File;
 using Vostok.Configuration.Sources.Json;
 
-namespace Vostok.Configuration.Demo
+namespace Vostok.Configuration.Demo.Tests
 {
     [TestFixture]
     internal class Configuration_FunctionalTests
@@ -74,6 +74,30 @@ namespace Vostok.Configuration.Demo
                 .WaitFirstValue(100.Milliseconds())
                 .Should()
                 .BeEquivalentTo(SettingsObject);
+        }
+        
+        [Test]
+        public void Should_bind_generic_settings_correctly()
+        {
+            var source = new JsonStringSource("{ 'InnerSettings': [{'a': 1}, {'a': 2}] }");
+
+            provider.Get<GenericClass<SettingsClass>>(source)
+                .Should()
+                .BeEquivalentTo(
+                    new GenericClass<SettingsClass>
+                    {
+                        InnerSettings = new List<SettingsClass>
+                        {
+                            new SettingsClass
+                            {
+                                A = 1
+                            },
+                            new SettingsClass
+                            {
+                                A = 2
+                            }
+                        }
+                    });
         }
 
         [Test]
@@ -181,6 +205,8 @@ namespace Vostok.Configuration.Demo
         [Test]
         public void Get_should_work_correctly_with_fresh_custom_sources()
         {
+            // WARNING: DO NOT create new sources in your code every time.
+            
             const int sourcesCount = 10000;
             
             using(var temporaryFile = new TemporaryFile("{ 'a': 1 }"))
@@ -199,6 +225,8 @@ namespace Vostok.Configuration.Demo
         [Test]
         public void Observe_should_work_correctly_with_fresh_custom_sources()
         {
+            // WARNING: DO NOT create new sources in your code every time.
+            
             const int sourcesCount = 10000;
             
             var observer = new TestObserver<int>();
@@ -256,6 +284,11 @@ namespace Vostok.Configuration.Demo
         private class NestedSettingsClass
         {
             public int D;
+        }
+        
+        private class GenericClass<T>
+        {
+            public List<T> InnerSettings;
         }
     }
 }

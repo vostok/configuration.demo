@@ -1,0 +1,19 @@
+{
+  "storageSettings": {
+    "clusterNames": ["dev", "prod"],
+    "grayPeriod": "1 second",
+    "retryAttempts": 5,
+    "maxPartSize": "50 megabytes"
+  },
+
+  "securitySettings": {
+    "authenticatorUri": "https://auth/",
+    "extensions": ["2fa"] 
+  },
+
+  "options": {
+    "application": {
+      "enableThrottling": true
+    }
+  }
+}

@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\vostok.devtools\library-common-props\Test-Project.props" />
+  <Import Project="..\..\vostok.devtools\git-commit-to-assembly-title\Vostok.Tools.GitCommit2AssemblyTitle.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;net471</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp2.1</TargetFrameworks>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.4.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="SimpleInjector" Version="4.3.0" />
+    <PackageReference Include="System.Reactive" Version="4.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\vostok.commons.testing\Vostok.Commons.Testing\AssertionAssertions.cs" Link="Commons\AssertionAssertions.cs" />
+    <Compile Include="..\..\vostok.commons.testing\Vostok.Commons.Testing\Observable\ObservableHelpers.cs" Link="Commons\ObservableHelpers.cs" />
+    <Compile Include="..\..\vostok.commons.testing\Vostok.Commons.Testing\Observable\TestObserver.cs" Link="Commons\TestObserver.cs" />
+    <Compile Include="..\..\vostok.commons.testing\Vostok.Commons.Testing\TemporaryFile.cs" Link="Commons\TemporaryFile.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="Vostok.Configuration.Abstractions">
+      <HintPath>..\..\vostok.configuration.abstractions\Vostok.Configuration.Abstractions\bin\Release\netstandard2.0\Vostok.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.Configuration">
+      <HintPath>..\..\vostok.configuration\Vostok.Configuration\bin\Release\netstandard2.0\Vostok.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.Configuration.Sources">
+      <HintPath>..\..\vostok.configuration.sources\Vostok.Configuration.Sources\bin\Release\netstandard2.0\Vostok.Configuration.Sources.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.Configuration.Sources.Json">
+      <HintPath>..\..\vostok.configuration.sources.json\Vostok.Configuration.Sources.Json\bin\Release\netstandard2.0\Vostok.Configuration.Sources.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

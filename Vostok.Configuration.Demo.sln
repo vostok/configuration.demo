@@ -1,9 +1,11 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2011
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Configuration.Demo.Tests", "Vostok.Configuration.Demo\Vostok.Configuration.Demo.csproj", "{87C54CC1-C3B8-4730-B55D-5DB6F9C3ABA3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vostok.Configuration.Demo", "Vostok.Configuration.Demo\Vostok.Configuration.Demo.csproj", "{5F3A9C54-149B-4DF4-AE30-D0378E9F82B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Configuration.Demo.Tests", "Vostok.Configuration.Demo.Tests\Vostok.Configuration.Demo.Tests.csproj", "{87C54CC1-C3B8-4730-B55D-5DB6F9C3ABA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,6 +14,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5F3A9C54-149B-4DF4-AE30-D0378E9F82B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F3A9C54-149B-4DF4-AE30-D0378E9F82B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F3A9C54-149B-4DF4-AE30-D0378E9F82B0}.NoTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F3A9C54-149B-4DF4-AE30-D0378E9F82B0}.NoTests|Any CPU.Build.0 = Debug|Any CPU
+		{5F3A9C54-149B-4DF4-AE30-D0378E9F82B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F3A9C54-149B-4DF4-AE30-D0378E9F82B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{87C54CC1-C3B8-4730-B55D-5DB6F9C3ABA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{87C54CC1-C3B8-4730-B55D-5DB6F9C3ABA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87C54CC1-C3B8-4730-B55D-5DB6F9C3ABA3}.NoTests|Any CPU.ActiveCfg = Release|Any CPU
