@@ -6,6 +6,10 @@ full-build *default:
       name: dotnet
 
   deps:
+    - vostok.configuration.logging
+    - vostok.logging.console
+    - vostok.logging.abstractions
+    - vostok.configuration.abstractions
     - vostok.devtools
     - vostok.configuration
     - vostok.configuration.sources
