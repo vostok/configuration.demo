@@ -8,11 +8,14 @@ using FluentAssertions.Extensions;
 using NUnit.Framework;
 using Vostok.Commons.Testing;
 using Vostok.Commons.Testing.Observable;
+using Vostok.Configuration.Abstractions;
 using Vostok.Configuration.Abstractions.Merging;
+using Vostok.Configuration.Printing;
 using Vostok.Configuration.Sources;
 using Vostok.Configuration.Sources.Constant;
 using Vostok.Configuration.Sources.File;
 using Vostok.Configuration.Sources.Json;
+using Vostok.Configuration.Sources.Object;
 
 namespace Vostok.Configuration.Demo.Tests
 {
@@ -30,8 +33,8 @@ namespace Vostok.Configuration.Demo.Tests
             }
         };
         
-        private ConfigurationProvider provider;
-        private JsonStringSource source;
+        private IConfigurationProvider provider;
+        private IConfigurationSource source;
 
         [SetUp]
         public void SetUp()
@@ -268,7 +271,55 @@ namespace Vostok.Configuration.Demo.Tests
                 .Should()
                 .BeEquivalentTo(new[]{1, 2, 3, 4, 5});
         }
-        
+
+        [Test]
+        public void Should_correctly_print_and_parse_settings()
+        {
+            var printedSettings = ConfigurationPrinter
+                .Print(SettingsObject, new PrintSettings {Format = PrintFormat.JSON});
+            source = new JsonStringSource(printedSettings);
+            provider.SetupSourceFor<SettingsClass>(source);
+
+            var settingsWithDictionary = new SettingsWithDictionary
+            {
+                VendorToSender =
+                {
+                    {Guid.NewGuid(), Guid.NewGuid()},
+                    {Guid.NewGuid(), Guid.NewGuid()},
+                    {Guid.NewGuid(), Guid.NewGuid()}
+                }
+            };
+
+            var printedSettingsWithDictionary = ConfigurationPrinter
+                .Print(settingsWithDictionary, new PrintSettings { Format = PrintFormat.JSON });
+            source = new JsonStringSource(printedSettingsWithDictionary);
+            provider.SetupSourceFor<SettingsWithDictionary>(source);
+
+            provider.Get<SettingsClass>().Should().BeEquivalentTo(SettingsObject);
+            provider.Get<SettingsWithDictionary>().Should().BeEquivalentTo(settingsWithDictionary);
+        }
+
+        [Test]
+        public void Should_correctly_traverse_custom_object_and_return()
+        {
+            source = new ObjectSource(SettingsObject);
+            provider.SetupSourceFor<SettingsClass>(source);
+
+            var settingsWithDictionary = new SettingsWithDictionary
+            {
+                VendorToSender =
+                {
+                    {Guid.NewGuid(), Guid.NewGuid()},
+                    {Guid.NewGuid(), Guid.NewGuid()},
+                    {Guid.NewGuid(), Guid.NewGuid()}
+                }
+            };
+            source = new ObjectSource(settingsWithDictionary);
+            provider.SetupSourceFor<SettingsWithDictionary>(source);
+
+            provider.Get<SettingsClass>().Should().BeEquivalentTo(SettingsObject);
+            provider.Get<SettingsWithDictionary>().Should().BeEquivalentTo(settingsWithDictionary);
+        }
         private JsonFileSource CreateJsonFileSource(string fileName)
         {
             return new JsonFileSource(new FileSourceSettings(fileName){FileWatcherPeriod = 100.Milliseconds()});
@@ -289,6 +340,15 @@ namespace Vostok.Configuration.Demo.Tests
         private class GenericClass<T>
         {
             public List<T> InnerSettings;
+        }
+
+        private class SettingsWithDictionary
+        {
+            public Dictionary<Guid, Guid> VendorToSender { get; set; }
+            public SettingsWithDictionary()
+            {
+                VendorToSender = new Dictionary<Guid, Guid>();
+            }
         }
     }
 }
