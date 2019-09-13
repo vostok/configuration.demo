@@ -22,7 +22,7 @@ namespace Vostok.Configuration.Demo.Tests
     [TestFixture]
     internal class Configuration_FunctionalTests
     {
-        private const string SettingsJson = "{ 'A': 1, 'B': '2', 'C': {'D': 3} }";
+        private const string SettingsJson = "{ 'A': 1, 'B': '2', 'C': {'D': 3}, 'E': { '00000000-0000-0000-0000-000000000000': 'F'} }";
         private static readonly SettingsClass SettingsObject = new SettingsClass
         {
             A = 1,
@@ -30,6 +30,10 @@ namespace Vostok.Configuration.Demo.Tests
             C = new NestedSettingsClass
             {
                 D = 3
+            },
+            E = new Dictionary<Guid, string>
+            {
+                [Guid.Empty] = "F"
             }
         };
         
@@ -82,7 +86,7 @@ namespace Vostok.Configuration.Demo.Tests
         [Test]
         public void Should_bind_generic_settings_correctly()
         {
-            var source = new JsonStringSource("{ 'InnerSettings': [{'a': 1}, {'a': 2}] }");
+            source = new JsonStringSource("{ 'InnerSettings': [{'a': 1}, {'a': 2}] }");
 
             provider.Get<GenericClass<SettingsClass>>(source)
                 .Should()
@@ -108,7 +112,7 @@ namespace Vostok.Configuration.Demo.Tests
         {
             using(var temporaryFile = new TemporaryFile("{ 'a': 1 }"))
             {
-                var source = CreateJsonFileSource(temporaryFile.FileName);
+                source = CreateJsonFileSource(temporaryFile.FileName);
                 
                 provider.Get<SettingsClass>(source)
                     .Should()
@@ -182,7 +186,7 @@ namespace Vostok.Configuration.Demo.Tests
             var expectedSettings = new List<Dictionary<string, int>>();
             using(var temporaryFile = new TemporaryFile())
             {
-                var source = CreateJsonFileSource(temporaryFile.FileName);
+                source = CreateJsonFileSource(temporaryFile.FileName);
 
                 using (provider.Observe<Dictionary<string, int>>(source).Subscribe(observer))
                 {
@@ -265,7 +269,7 @@ namespace Vostok.Configuration.Demo.Tests
         [Test]
         public void Combine_and_scope_should_work_correctly_when_same_source()
         {
-            var source = new JsonStringSource("{ 'a': { 'c': [1, 2, 3] }, 'b': { 'c': [4, 5] } }");
+            source = new JsonStringSource("{ 'a': { 'c': [1, 2, 3] }, 'b': { 'c': [4, 5] } }");
 
             provider.Get<int[]>(source.ScopeTo("a").CombineWith(source.ScopeTo("b"), new SettingsMergeOptions{ArrayMergeStyle = ArrayMergeStyle.Concat}).ScopeTo("c"))
                 .Should()
@@ -280,23 +284,7 @@ namespace Vostok.Configuration.Demo.Tests
             source = new JsonStringSource(printedSettings);
             provider.SetupSourceFor<SettingsClass>(source);
 
-            var settingsWithDictionary = new SettingsWithDictionary
-            {
-                VendorToSender =
-                {
-                    {Guid.NewGuid(), Guid.NewGuid()},
-                    {Guid.NewGuid(), Guid.NewGuid()},
-                    {Guid.NewGuid(), Guid.NewGuid()}
-                }
-            };
-
-            var printedSettingsWithDictionary = ConfigurationPrinter
-                .Print(settingsWithDictionary, new PrintSettings { Format = PrintFormat.JSON });
-            source = new JsonStringSource(printedSettingsWithDictionary);
-            provider.SetupSourceFor<SettingsWithDictionary>(source);
-
             provider.Get<SettingsClass>().Should().BeEquivalentTo(SettingsObject);
-            provider.Get<SettingsWithDictionary>().Should().BeEquivalentTo(settingsWithDictionary);
         }
 
         [Test]
@@ -305,20 +293,7 @@ namespace Vostok.Configuration.Demo.Tests
             source = new ObjectSource(SettingsObject);
             provider.SetupSourceFor<SettingsClass>(source);
 
-            var settingsWithDictionary = new SettingsWithDictionary
-            {
-                VendorToSender =
-                {
-                    {Guid.NewGuid(), Guid.NewGuid()},
-                    {Guid.NewGuid(), Guid.NewGuid()},
-                    {Guid.NewGuid(), Guid.NewGuid()}
-                }
-            };
-            source = new ObjectSource(settingsWithDictionary);
-            provider.SetupSourceFor<SettingsWithDictionary>(source);
-
             provider.Get<SettingsClass>().Should().BeEquivalentTo(SettingsObject);
-            provider.Get<SettingsWithDictionary>().Should().BeEquivalentTo(settingsWithDictionary);
         }
         private JsonFileSource CreateJsonFileSource(string fileName)
         {
@@ -330,6 +305,7 @@ namespace Vostok.Configuration.Demo.Tests
             public int A;
             public string B;
             public NestedSettingsClass C;
+            public IDictionary<Guid, string> E;
         }
 
         private class NestedSettingsClass
@@ -342,13 +318,5 @@ namespace Vostok.Configuration.Demo.Tests
             public List<T> InnerSettings;
         }
 
-        private class SettingsWithDictionary
-        {
-            public Dictionary<Guid, Guid> VendorToSender { get; set; }
-            public SettingsWithDictionary()
-            {
-                VendorToSender = new Dictionary<Guid, Guid>();
-            }
-        }
     }
 }
