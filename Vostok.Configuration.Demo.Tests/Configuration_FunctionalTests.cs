@@ -22,7 +22,7 @@ namespace Vostok.Configuration.Demo.Tests
     [TestFixture]
     internal class Configuration_FunctionalTests
     {
-        private const string SettingsJson = "{ 'A': 1, 'B': '2', 'C': {'D': 3}, 'E': { '00000000-0000-0000-0000-000000000000': 'F'} }";
+        private const string SettingsJson = "{ 'A': 1, 'B': '2', 'C': {'D': 3}, 'E': { '00000000-0000-0000-0000-000000000000': 'F'}, 'G': null }";
         private static readonly SettingsClass SettingsObject = new SettingsClass
         {
             A = 1,
@@ -34,7 +34,8 @@ namespace Vostok.Configuration.Demo.Tests
             E = new Dictionary<Guid, string>
             {
                 [Guid.Empty] = "F"
-            }
+            },
+            G = null
         };
         
         private IConfigurationProvider provider;
@@ -306,6 +307,7 @@ namespace Vostok.Configuration.Demo.Tests
             public string B;
             public NestedSettingsClass C;
             public IDictionary<Guid, string> E;
+            public IList<int> G;
         }
 
         private class NestedSettingsClass
